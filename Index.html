@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Temperature Monitor</title>
+</head>
+<body>
+  <h1>Temperature: <span id="temperature"></span></h1>
+
+  <script>
+    var serial; // variable to hold an instance of the serialport library
+    var portName = 'COM3'; // replace with your port
+    var inData; // for incoming data
+
+    function setup() {
+      // Make the canvas the same size as the browser window
+      createCanvas(windowWidth, windowHeight);
+      serial = new Serial();
+      serial.on( 'connected', serverConnected);
+      serial.on( 'data', serialEvent);
+      serial.on( 'close', serverClose);
+      serial.open(portName);
+    }
+
+    function serverConnected() {
+      console.log("connected to the serial port");
+    }
+
+    function serverClose() {
+        console.log('connection is closed');
+    }
+
+    function serialEvent() {
+       inData = Number(serial.readStringUntil('\n'));
+       if (inData) {
+           document.getElementById('temperature').textContent = inData;
+       }
+    }
+
+    function draw() {
+      // You don't need to draw anything in this example, but you can
+    }
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/serialport@latest/lib/serialport.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5.serialport@latest/lib/p5.serialport.js"></script>
+</body>
+</html>
